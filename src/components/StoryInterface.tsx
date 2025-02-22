@@ -9,18 +9,23 @@ import { useToast } from './ui/use-toast';
 // Add type declaration for the Web Speech API
 declare global {
   interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
   }
+}
+
+interface StoryResponse {
+  story: string;
+  timestamp: number;
 }
 
 const StoryInterface = () => {
   const [input, setInput] = useState('');
   const [isRecording, setIsRecording] = useState(false);
-  const [story, setStory] = useState('');
+  const [stories, setStories] = useState<StoryResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -30,7 +35,7 @@ const StoryInterface = () => {
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
 
-      recognitionRef.current.onresult = (event) => {
+      recognitionRef.current.onresult = (event: any) => {
         const transcript = Array.from(event.results)
           .map(result => result[0])
           .map(result => result.transcript)
@@ -38,7 +43,7 @@ const StoryInterface = () => {
         setInput(transcript);
       };
 
-      recognitionRef.current.onerror = (event) => {
+      recognitionRef.current.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
         setIsRecording(false);
         toast({
@@ -85,20 +90,28 @@ const StoryInterface = () => {
     }
 
     setIsLoading(true);
-      try {
-        const response = await fetch('http://localhost:5000/api/generate-story', {
+    try {
+      const response = await fetch('http://localhost:5000/api/generate-story', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ text: input }),
-        });
+      });
 
       if (!response.ok) throw new Error('Failed to generate story');
       
       const data = await response.json();
-      setStory(data.story);
       
+      // Add new story to the beginning of the array
+      setStories(prevStories => [{
+        story: data.story,
+        timestamp: Date.now()
+      }, ...prevStories]);
+      
+      // Clear input after successful submission
+      setInput('');
+
       // Text to speech
       const ttsResponse = await fetch('http://localhost:5000/api/tts', {
         method: 'POST',
@@ -109,12 +122,6 @@ const StoryInterface = () => {
       });
 
       if (!ttsResponse.ok) throw new Error('Failed to convert to speech');
-      
-      // Handle audio playback here
-      // const audioBlob = await ttsResponse.blob();
-      // const audioUrl = URL.createObjectURL(audioBlob);
-      // const audio = new Audio(audioUrl);
-      // audio.play();
     } catch (error) {
       toast({
         title: "Error",
@@ -129,6 +136,22 @@ const StoryInterface = () => {
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
+        {/* Stories Section */}
+        {stories.map((story, index) => (
+          <Card key={story.timestamp} className="p-6 shadow-lg border-story-border bg-white animate-fade-in">
+            <div className="prose max-w-none">
+              <p className="text-lg leading-relaxed text-gray-800">{story.story}</p>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <Button variant="ghost" className="text-story-accent">
+                <Play className="mr-2 h-4 w-4" />
+                Play Audio
+              </Button>
+            </div>
+          </Card>
+        ))}
+
+        {/* Input Section */}
         <Card className="p-6 shadow-lg border-story-border bg-story-background">
           <div className="space-y-4">
             <div className="relative">
@@ -170,20 +193,6 @@ const StoryInterface = () => {
             </div>
           </div>
         </Card>
-
-        {story && (
-          <Card className="p-6 shadow-lg border-story-border bg-white animate-fade-in">
-            <div className="prose max-w-none">
-              <p className="text-lg leading-relaxed text-gray-800">{story}</p>
-            </div>
-            <div className="mt-4 flex justify-end">
-              <Button variant="ghost" className="text-story-accent">
-                <Play className="mr-2 h-4 w-4" />
-                Play Audio
-              </Button>
-            </div>
-          </Card>
-        )}
       </div>
     </div>
   );
