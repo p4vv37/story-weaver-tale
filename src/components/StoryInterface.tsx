@@ -6,6 +6,14 @@ import { Card } from './ui/card';
 import { Textarea } from './ui/textarea';
 import { useToast } from './ui/use-toast';
 
+// Add type declaration for the Web Speech API
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
+
 const StoryInterface = () => {
   const [input, setInput] = useState('');
   const [isRecording, setIsRecording] = useState(false);
@@ -15,9 +23,10 @@ const StoryInterface = () => {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   useEffect(() => {
-    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (SpeechRecognitionAPI) {
+      recognitionRef.current = new SpeechRecognitionAPI();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
 
