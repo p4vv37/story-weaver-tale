@@ -14,6 +14,7 @@ declare global {
 }
 
 interface StoryResponse {
+  userInput: string;
   story: string;
   timestamp: number;
 }
@@ -102,11 +103,12 @@ const StoryInterface = () => {
       
       const data = await response.json();
       
-      // Add new story to the beginning of the array
-      setStories(prevStories => [{
-        story: data.text, // Changed from data.story to data.text to match the API response
+      // Add new story to the end of the array
+      setStories(prevStories => [...prevStories, {
+        userInput: input,
+        story: data.text,
         timestamp: Date.now()
-      }, ...prevStories]);
+      }]);
       
       setInput('');
 
@@ -137,8 +139,15 @@ const StoryInterface = () => {
         {/* Stories Section */}
         {stories.map((story, index) => (
           <Card key={story.timestamp} className="p-6 shadow-lg border-story-border bg-white">
-            <div className="prose max-w-none">
-              <p className="text-lg leading-relaxed text-gray-800">{story.story}</p>
+            <div className="prose max-w-none space-y-4">
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <h3 className="font-medium text-gray-600 mb-2">Your Input:</h3>
+                <p className="text-gray-800">{story.userInput}</p>
+              </div>
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h3 className="font-medium text-gray-600 mb-2">Generated Story:</h3>
+                <p className="text-gray-800">{story.story}</p>
+              </div>
             </div>
             <div className="mt-4 flex justify-end">
               <Button variant="ghost" className="text-story-accent">
@@ -197,3 +206,4 @@ const StoryInterface = () => {
 };
 
 export default StoryInterface;
+
