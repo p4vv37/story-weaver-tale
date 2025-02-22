@@ -135,7 +135,7 @@ const StoryInterface = () => {
   const handleStartStory = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/start_story', {
+      const response = await fetch('http://localhost:5000/api/start-story', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
