@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Send, Play } from 'lucide-react';
+import { Mic, MicOff, Send, Play, BookOpen } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Textarea } from './ui/textarea';
@@ -24,6 +24,7 @@ const StoryInterface = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [stories, setStories] = useState<StoryResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const { toast } = useToast();
   const recognitionRef = useRef<any>(null);
 
@@ -103,7 +104,6 @@ const StoryInterface = () => {
       
       const data = await response.json();
       
-      // Add new story to the end of the array
       setStories(prevStories => [...prevStories, {
         userInput: input,
         story: data.text,
@@ -112,7 +112,6 @@ const StoryInterface = () => {
       
       setInput('');
 
-      // Text to speech
       const ttsResponse = await fetch('http://localhost:5000/api/tts', {
         method: 'POST',
         headers: {
@@ -133,10 +132,63 @@ const StoryInterface = () => {
     }
   };
 
+  const handleStartStory = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/start_story', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to start story');
+      
+      const data = await response.json();
+      
+      setStories([{
+        userInput: "Start new story",
+        story: data.text,
+        timestamp: Date.now()
+      }]);
+      
+      setHasStarted(true);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to start story. Please try again." + error,
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (!hasStarted) {
+    return (
+      <div className="min-h-screen bg-background p-8 flex items-center justify-center">
+        <Button
+          onClick={handleStartStory}
+          disabled={isLoading}
+          size="lg"
+          className="text-lg gap-3 transition-all duration-200 ease-in-out hover:scale-105"
+        >
+          {isLoading ? (
+            "Starting Story..."
+          ) : (
+            <>
+              <BookOpen className="h-6 w-6" />
+              Start New Story
+            </>
+          )}
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-2xl mx-auto space-y-8">
-        {/* Stories Section */}
         {stories.map((story, index) => (
           <Card key={story.timestamp} className="p-6 shadow-lg border-story-border bg-white">
             <div className="prose max-w-none space-y-4">
@@ -158,7 +210,6 @@ const StoryInterface = () => {
           </Card>
         ))}
 
-        {/* Input Section */}
         <Card className="p-6 shadow-lg border-story-border bg-story-background">
           <div className="space-y-4">
             <div className="relative">
