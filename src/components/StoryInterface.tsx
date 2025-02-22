@@ -146,6 +146,13 @@ const StoryInterface = () => {
       if (!response.ok) throw new Error('Failed to start story');
       
       const data = await response.json();
+      const ttsResponse = await fetch('http://localhost:5000/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: data.text }),
+      });
       
       setStories([{
         userInput: "Start new story",
