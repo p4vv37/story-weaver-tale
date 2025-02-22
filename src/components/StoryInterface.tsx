@@ -85,14 +85,14 @@ const StoryInterface = () => {
     }
 
     setIsLoading(true);
-    try {
-      const response = await fetch('/generate-story', {
+      try {
+        const response = await fetch('http://localhost:5000/api/generate-story', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt: input }),
-      });
+        body: JSON.stringify({ text: input }),
+        });
 
       if (!response.ok) throw new Error('Failed to generate story');
       
@@ -100,25 +100,25 @@ const StoryInterface = () => {
       setStory(data.story);
       
       // Text to speech
-      const ttsResponse = await fetch('/tts', {
+      const ttsResponse = await fetch('http://localhost:5000/api/tts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: data.story }),
+        body: JSON.stringify({ text: data.text }),
       });
 
       if (!ttsResponse.ok) throw new Error('Failed to convert to speech');
       
       // Handle audio playback here
-      const audioBlob = await ttsResponse.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audio.play();
+      // const audioBlob = await ttsResponse.blob();
+      // const audioUrl = URL.createObjectURL(audioBlob);
+      // const audio = new Audio(audioUrl);
+      // audio.play();
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to generate story. Please try again.",
+        description: "Failed to generate story. Please try again." + error,
         variant: "destructive"
       });
     } finally {
