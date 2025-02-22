@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Textarea } from './ui/textarea';
 import { useToast } from './ui/use-toast';
+import ReactMarkdown from 'react-markdown';
 
 declare global {
   interface Window {
@@ -198,7 +199,9 @@ const StoryInterface = () => {
               </div>
               <div className="p-4 bg-blue-50 rounded-lg">
                 <h3 className="font-medium text-gray-600 mb-2">Generated Story:</h3>
-                <p className="text-gray-800">{story.story}</p>
+                <div className="text-gray-800 prose">
+                  <ReactMarkdown>{story.story}</ReactMarkdown>
+                </div>
               </div>
             </div>
             <div className="mt-4 flex justify-end">
@@ -257,4 +260,3 @@ const StoryInterface = () => {
 };
 
 export default StoryInterface;
-
