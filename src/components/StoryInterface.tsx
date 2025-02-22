@@ -6,7 +6,6 @@ import { Card } from './ui/card';
 import { Textarea } from './ui/textarea';
 import { useToast } from './ui/use-toast';
 
-// Add type declaration for the Web Speech API
 declare global {
   interface Window {
     SpeechRecognition: any;
@@ -105,11 +104,10 @@ const StoryInterface = () => {
       
       // Add new story to the beginning of the array
       setStories(prevStories => [{
-        story: data.story,
+        story: data.text, // Changed from data.story to data.text to match the API response
         timestamp: Date.now()
       }, ...prevStories]);
       
-      // Clear input after successful submission
       setInput('');
 
       // Text to speech
@@ -135,10 +133,10 @@ const StoryInterface = () => {
 
   return (
     <div className="min-h-screen bg-background p-8">
-      <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
+      <div className="max-w-2xl mx-auto space-y-8">
         {/* Stories Section */}
         {stories.map((story, index) => (
-          <Card key={story.timestamp} className="p-6 shadow-lg border-story-border bg-white animate-fade-in">
+          <Card key={story.timestamp} className="p-6 shadow-lg border-story-border bg-white">
             <div className="prose max-w-none">
               <p className="text-lg leading-relaxed text-gray-800">{story.story}</p>
             </div>
