@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Send, Play, BookOpen } from 'lucide-react';
 import { Button } from './ui/button';
@@ -262,14 +263,14 @@ const StoryInterface = () => {
               </Button>
             </div>
             
-            <div className="flex justify-end space-x-2">
+            <div className="flex justify-end">
               <Button
                 onClick={handleSubmit}
                 disabled={isLoading}
-                className="transition-all duration-200 ease-in-out hover:scale-105 glass-morphism text-white"
+                className="w-full h-12 transition-all duration-200 ease-in-out hover:scale-105 glass-morphism text-white"
               >
                 {isLoading ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 justify-center w-full">
                     <SpinningLoader className="text-white h-4 w-4" />
                     Generating...
                   </div>
