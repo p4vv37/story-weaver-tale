@@ -178,7 +178,7 @@ const StoryInterface = () => {
           onClick={handleStartStory}
           disabled={isLoading}
           size="lg"
-          className="text-lg gap-3 transition-all duration-200 ease-in-out hover:scale-105"
+          className="text-lg gap-3 transition-all duration-200 ease-in-out hover:scale-105 glass-morphism"
         >
           {isLoading ? (
             <div className="flex items-center gap-2">
@@ -200,21 +200,21 @@ const StoryInterface = () => {
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-2xl mx-auto space-y-8">
         {stories.map((story, index) => (
-          <Card key={story.timestamp} className="p-6 shadow-lg border-story-border bg-white animate-fade-in">
+          <Card key={story.timestamp} className="p-6 glass-morphism">
             <div className="prose max-w-none space-y-4">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-medium text-gray-600 mb-2">Your Input:</h3>
-                <p className="text-gray-800">{story.userInput}</p>
+              <div className="p-4 bg-secondary/50 rounded-lg neo-blur">
+                <h3 className="font-medium text-white/80 mb-2">Your Input:</h3>
+                <p className="text-white/90">{story.userInput}</p>
               </div>
-              <div className="p-4 bg-blue-50 rounded-lg backdrop-blur-sm">
-                <h3 className="font-medium text-gray-600 mb-2">Generated Story:</h3>
-                <div className="text-gray-800 prose">
+              <div className="p-4 bg-primary/5 rounded-lg neo-blur">
+                <h3 className="font-medium text-white/80 mb-2">Generated Story:</h3>
+                <div className="text-white/90 prose">
                   <AnimatedText text={story.story} />
                 </div>
               </div>
             </div>
             <div className="mt-4 flex justify-end">
-              <Button variant="ghost" className="text-story-accent">
+              <Button variant="ghost" className="text-white/70 hover:text-white hover:bg-white/10">
                 <Play className="mr-2 h-4 w-4" />
                 Play Audio
               </Button>
@@ -222,27 +222,27 @@ const StoryInterface = () => {
           </Card>
         ))}
 
-        <Card className="p-6 shadow-lg border-story-border bg-story-background">
+        <Card className="p-6 glass-morphism">
           <div className="space-y-4">
             <div className="relative">
               <Textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Tell me your story idea..."
-                className="min-h-[120px] resize-none pr-12 text-lg"
+                className="min-h-[120px] resize-none pr-12 text-lg bg-secondary/50 border-white/10 text-white/90 placeholder:text-white/50"
                 disabled={isLoading}
               />
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-2 top-2 hover:bg-story-accent/10"
+                className="absolute right-2 top-2 hover:bg-white/10"
                 onClick={toggleRecording}
                 disabled={isLoading}
               >
                 {isRecording ? (
-                  <MicOff className="h-5 w-5 text-red-500" />
+                  <MicOff className="h-5 w-5 text-red-400" />
                 ) : (
-                  <Mic className="h-5 w-5 text-story-accent" />
+                  <Mic className="h-5 w-5 text-white/70" />
                 )}
               </Button>
             </div>
@@ -251,7 +251,7 @@ const StoryInterface = () => {
               <Button
                 onClick={handleSubmit}
                 disabled={isLoading}
-                className="transition-all duration-200 ease-in-out hover:scale-105"
+                className="transition-all duration-200 ease-in-out hover:scale-105 glass-morphism"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
