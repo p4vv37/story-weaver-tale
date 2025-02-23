@@ -42,10 +42,10 @@ const AnimatedText = ({ text, className }: AnimatedTextProps) => {
                   {words.map((word, index) => (
                     <span
                       key={index}
-                      className={`inline-block transition-all duration-300 ${
+                      className={`inline-block transition-all duration-500 ${
                         index < currentIndex 
-                          ? 'opacity-100 blur-none translate-y-0' 
-                          : 'opacity-0 blur-sm translate-y-1'
+                          ? 'opacity-100 blur-none translate-y-0 scale-100' 
+                          : 'opacity-0 blur-sm translate-y-2 scale-95'
                       }`}
                     >
                       {word}
@@ -65,3 +65,4 @@ const AnimatedText = ({ text, className }: AnimatedTextProps) => {
 };
 
 export default AnimatedText;
+
