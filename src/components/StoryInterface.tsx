@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Send, Play, BookOpen } from 'lucide-react';
 import { Button } from './ui/button';
@@ -6,6 +5,7 @@ import { Card } from './ui/card';
 import { Textarea } from './ui/textarea';
 import { useToast } from './ui/use-toast';
 import AnimatedText from './AnimatedText';
+import SpinningLoader from './SpinningLoader';
 
 declare global {
   interface Window {
@@ -190,7 +190,7 @@ const StoryInterface = () => {
         >
           {isLoading ? (
             <div className="flex items-center gap-2">
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              <SpinningLoader className="text-white h-4 w-4" />
               Starting Story...
             </div>
           ) : (
@@ -270,7 +270,7 @@ const StoryInterface = () => {
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    <SpinningLoader className="text-white h-4 w-4" />
                     Generating...
                   </div>
                 ) : (
