@@ -8,61 +8,25 @@ interface AnimatedTextProps {
 }
 
 const AnimatedText = ({ text, className }: AnimatedTextProps) => {
-  const [words, setWords] = useState<string[]>([]);
+  const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    // Split the text into words while preserving spaces
-    const splitText = text.split(/(\s+|\b)/);
-    setWords(splitText);
-    setCurrentIndex(0);
-  }, [text]);
-
-  useEffect(() => {
-    if (currentIndex < words.length) {
+    if (currentIndex < text.length) {
       const timer = setTimeout(() => {
+        setDisplayedText(text.substring(0, currentIndex + 1));
         setCurrentIndex(currentIndex + 1);
-      }, 100); // Adjust speed here (lower number = faster)
+      }, 50); // Adjust speed here (lower number = faster)
 
       return () => clearTimeout(timer);
     }
-  }, [currentIndex, words]);
-
-  // Combine all visible words for markdown parsing
-  const visibleText = words.slice(0, currentIndex).join('');
+  }, [currentIndex, text]);
 
   return (
     <div className={`transition-opacity duration-300 ${className}`}>
-      <ReactMarkdown
-        components={{
-          p: ({ children }) => {
-            if (typeof children === 'string') {
-              return (
-                <p>
-                  {words.map((word, index) => (
-                    <span
-                      key={index}
-                      className={`inline-block transition-all duration-500 ${
-                        index < currentIndex 
-                          ? 'opacity-100 blur-none translate-y-0 scale-100' 
-                          : 'opacity-0 blur-sm translate-y-2 scale-95'
-                      }`}
-                    >
-                      {word}
-                    </span>
-                  ))}
-                </p>
-              );
-            }
-            return <p>{children}</p>;
-          }
-        }}
-      >
-        {visibleText}
-      </ReactMarkdown>
+      <ReactMarkdown>{displayedText}</ReactMarkdown>
     </div>
   );
 };
 
 export default AnimatedText;
-
