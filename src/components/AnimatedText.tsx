@@ -12,8 +12,8 @@ const AnimatedText = ({ text, className }: AnimatedTextProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    // Split the text into words, preserving markdown syntax
-    const splitText = text.split(/(\s+)/).filter(word => word.length > 0);
+    // Split the text into words while preserving spaces
+    const splitText = text.split(/(\s+|\b)/);
     setWords(splitText);
     setCurrentIndex(0);
   }, [text]);
