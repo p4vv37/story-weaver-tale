@@ -28,23 +28,6 @@ const AnimatedText = ({ text, className }: AnimatedTextProps) => {
     }
   }, [currentIndex, words]);
 
-  // Custom renderer for ReactMarkdown that applies animation to each word
-  const renderWord = (word: string, index: number) => {
-    const isVisible = index < currentIndex;
-    return (
-      <span
-        key={index}
-        className={`inline-block transition-all duration-300 ${
-          isVisible 
-            ? 'opacity-100 blur-none translate-y-0' 
-            : 'opacity-0 blur-sm translate-y-1'
-        }`}
-      >
-        {word}
-      </span>
-    );
-  };
-
   // Combine all visible words for markdown parsing
   const visibleText = words.slice(0, currentIndex).join('');
 
@@ -56,7 +39,18 @@ const AnimatedText = ({ text, className }: AnimatedTextProps) => {
             if (typeof children === 'string') {
               return (
                 <p>
-                  {words.map((word, index) => renderWord(word, index))}
+                  {words.map((word, index) => (
+                    <span
+                      key={index}
+                      className={`inline-block transition-all duration-300 ${
+                        index < currentIndex 
+                          ? 'opacity-100 blur-none translate-y-0' 
+                          : 'opacity-0 blur-sm translate-y-1'
+                      }`}
+                    >
+                      {word}
+                    </span>
+                  ))}
                 </p>
               );
             }
