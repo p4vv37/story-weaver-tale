@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Send, Play, BookOpen } from 'lucide-react';
 import { Button } from './ui/button';
@@ -30,6 +31,7 @@ const StoryInterface = () => {
   const [isImageChanging, setIsImageChanging] = useState(false);
   const { toast } = useToast();
   const recognitionRef = useRef<any>(null);
+  const newImagePathRef = useRef<string>('');
 
   useEffect(() => {
     const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -86,6 +88,10 @@ const StoryInterface = () => {
   const fetchNewImage = async () => {
     try {
       setIsImageChanging(true);
+      
+      // Wait for fade out
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
       const response = await fetch('http://localhost:5000/api/get-image', {
         method: 'POST',
         headers: {
@@ -96,11 +102,15 @@ const StoryInterface = () => {
       if (!response.ok) throw new Error('Failed to fetch new image');
       
       const data = await response.json();
-      setImagePath(data.imagePath);
+      newImagePathRef.current = data.imagePath;
       
-      setTimeout(() => {
-        setIsImageChanging(false);
-      }, 300);
+      // After getting new image path, wait a short moment before updating
+      await new Promise(resolve => setTimeout(resolve, 50));
+      setImagePath(newImagePathRef.current);
+      
+      // Wait a short moment before starting fade in
+      await new Promise(resolve => setTimeout(resolve, 50));
+      setIsImageChanging(false);
     } catch (error) {
       console.error('Error fetching new image:', error);
       setIsImageChanging(false);
