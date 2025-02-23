@@ -180,7 +180,7 @@ const StoryInterface = () => {
           <img
             src="/lovable-uploads/77ea953b-83c9-4dfd-82ed-386a049da785.png"
             alt="3 Chapters"
-            className="w-full object-cover rounded-lg shadow-2xl mb-12"
+            className="backlight w-full object-cover rounded-lg shadow-2xl mb-12"
           />
         </div>
         <Button
@@ -211,7 +211,7 @@ const StoryInterface = () => {
         <img
           src="/lovable-uploads/77ea953b-83c9-4dfd-82ed-386a049da785.png"
           alt="3 Chapters"
-          className="w-full object-cover rounded-lg shadow-2xl mb-8"
+          className="backlight w-full object-cover rounded-lg shadow-2xl mb-8"
         />
       </div>
       <div className="max-w-2xl mx-auto space-y-8">
