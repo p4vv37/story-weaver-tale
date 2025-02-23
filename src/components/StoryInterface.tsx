@@ -27,6 +27,7 @@ const StoryInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [imagePath, setImagePath] = useState('/lovable-uploads/77ea953b-83c9-4dfd-82ed-386a049da785.png');
+  const [isImageChanging, setIsImageChanging] = useState(false);
   const { toast } = useToast();
   const recognitionRef = useRef<any>(null);
 
@@ -84,6 +85,7 @@ const StoryInterface = () => {
 
   const fetchNewImage = async () => {
     try {
+      setIsImageChanging(true);
       const response = await fetch('http://localhost:5000/api/get-image', {
         method: 'POST',
         headers: {
@@ -95,8 +97,13 @@ const StoryInterface = () => {
       
       const data = await response.json();
       setImagePath(data.imagePath);
+      
+      setTimeout(() => {
+        setIsImageChanging(false);
+      }, 300);
     } catch (error) {
       console.error('Error fetching new image:', error);
+      setIsImageChanging(false);
     }
   };
 
@@ -202,7 +209,9 @@ const StoryInterface = () => {
           <img
             src={imagePath}
             alt="Story Title"
-            className="backlight w-full object-cover rounded-lg shadow-2xl mb-12"
+            className={`backlight w-full object-cover rounded-lg shadow-2xl mb-12 transition-opacity duration-300 ${
+              isImageChanging ? 'opacity-0' : 'opacity-100'
+            }`}
           />
         </div>
         <Button
@@ -233,7 +242,9 @@ const StoryInterface = () => {
         <img
           src={imagePath}
           alt="Story Title"
-          className="backlight w-full object-cover rounded-lg shadow-2xl mb-8"
+          className={`backlight w-full object-cover rounded-lg shadow-2xl mb-8 transition-opacity duration-300 ${
+            isImageChanging ? 'opacity-0' : 'opacity-100'
+          }`}
         />
       </div>
       <div className="max-w-2xl mx-auto space-y-8">
