@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Send, Play, BookOpen } from 'lucide-react';
 import { Button } from './ui/button';
@@ -173,12 +174,19 @@ const StoryInterface = () => {
 
   if (!hasStarted) {
     return (
-      <div className="min-h-screen bg-background p-8 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-start p-8">
+        <div className="w-full max-w-3xl mb-8">
+          <img
+            src="/lovable-uploads/77ea953b-83c9-4dfd-82ed-386a049da785.png"
+            alt="3 Chapters"
+            className="w-full object-cover rounded-lg shadow-2xl mb-12"
+          />
+        </div>
         <Button
           onClick={handleStartStory}
           disabled={isLoading}
           size="lg"
-          className="text-lg gap-3 transition-all duration-200 ease-in-out hover:scale-105 glass-morphism"
+          className="text-lg gap-3 transition-all duration-200 ease-in-out hover:scale-105 glass-morphism text-white"
         >
           {isLoading ? (
             <div className="flex items-center gap-2">
@@ -198,6 +206,13 @@ const StoryInterface = () => {
 
   return (
     <div className="min-h-screen bg-background p-8">
+      <div className="w-full max-w-3xl mx-auto mb-8">
+        <img
+          src="/lovable-uploads/77ea953b-83c9-4dfd-82ed-386a049da785.png"
+          alt="3 Chapters"
+          className="w-full object-cover rounded-lg shadow-2xl mb-8"
+        />
+      </div>
       <div className="max-w-2xl mx-auto space-y-8">
         {stories.map((story, index) => (
           <Card key={story.timestamp} className="p-6 glass-morphism">
@@ -214,7 +229,7 @@ const StoryInterface = () => {
               </div>
             </div>
             <div className="mt-4 flex justify-end">
-              <Button variant="ghost" className="text-white/70 hover:text-white hover:bg-white/10">
+              <Button variant="ghost" className="text-white hover:text-white hover:bg-white/10">
                 <Play className="mr-2 h-4 w-4" />
                 Play Audio
               </Button>
@@ -235,14 +250,14 @@ const StoryInterface = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-2 top-2 hover:bg-white/10"
+                className="absolute right-2 top-2 hover:bg-white/10 text-white"
                 onClick={toggleRecording}
                 disabled={isLoading}
               >
                 {isRecording ? (
                   <MicOff className="h-5 w-5 text-red-400" />
                 ) : (
-                  <Mic className="h-5 w-5 text-white/70" />
+                  <Mic className="h-5 w-5" />
                 )}
               </Button>
             </div>
@@ -251,7 +266,7 @@ const StoryInterface = () => {
               <Button
                 onClick={handleSubmit}
                 disabled={isLoading}
-                className="transition-all duration-200 ease-in-out hover:scale-105 glass-morphism"
+                className="transition-all duration-200 ease-in-out hover:scale-105 glass-morphism text-white"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
