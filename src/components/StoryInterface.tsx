@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Send, Play, BookOpen } from 'lucide-react';
 import { Button } from './ui/button';
@@ -27,6 +26,7 @@ const StoryInterface = () => {
   const [stories, setStories] = useState<StoryResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [imagePath, setImagePath] = useState('/lovable-uploads/77ea953b-83c9-4dfd-82ed-386a049da785.png');
   const { toast } = useToast();
   const recognitionRef = useRef<any>(null);
 
@@ -82,6 +82,24 @@ const StoryInterface = () => {
     setIsRecording(!isRecording);
   };
 
+  const fetchNewImage = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/get-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch new image');
+      
+      const data = await response.json();
+      setImagePath(data.imagePath);
+    } catch (error) {
+      console.error('Error fetching new image:', error);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!input.trim()) {
       toast({
@@ -123,6 +141,8 @@ const StoryInterface = () => {
       });
 
       if (!ttsResponse.ok) throw new Error('Failed to convert to speech');
+
+      await fetchNewImage();
     } catch (error) {
       toast({
         title: "Error",
@@ -162,6 +182,8 @@ const StoryInterface = () => {
       }]);
       
       setHasStarted(true);
+
+      await fetchNewImage();
     } catch (error) {
       toast({
         title: "Error",
@@ -178,8 +200,8 @@ const StoryInterface = () => {
       <div className="min-h-screen bg-background flex flex-col items-center justify-start p-8">
         <div className="w-full max-w-3xl mb-8">
           <img
-            src="/lovable-uploads/77ea953b-83c9-4dfd-82ed-386a049da785.png"
-            alt="3 Chapters"
+            src={imagePath}
+            alt="Story Title"
             className="backlight w-full object-cover rounded-lg shadow-2xl mb-12"
           />
         </div>
@@ -209,8 +231,8 @@ const StoryInterface = () => {
     <div className="min-h-screen bg-background p-8">
       <div className="w-full max-w-3xl mx-auto mb-8">
         <img
-          src="/lovable-uploads/77ea953b-83c9-4dfd-82ed-386a049da785.png"
-          alt="3 Chapters"
+          src={imagePath}
+          alt="Story Title"
           className="backlight w-full object-cover rounded-lg shadow-2xl mb-8"
         />
       </div>
