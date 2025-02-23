@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Send, Play, BookOpen } from 'lucide-react';
 import { Button } from './ui/button';
@@ -104,6 +105,7 @@ const StoryInterface = () => {
       
       const data = await response.json();
       
+      // Add the story immediately to start the animation
       setStories(prevStories => [...prevStories, {
         userInput: input,
         story: data.text,
@@ -112,15 +114,22 @@ const StoryInterface = () => {
       
       setInput('');
 
-      const ttsResponse = await fetch('http://localhost:5000/api/tts', {
+      // Start the TTS request without waiting for it to complete
+      fetch('http://localhost:5000/api/tts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ text: data.text }),
+      }).catch(error => {
+        console.error('TTS generation failed:', error);
+        toast({
+          title: "Warning",
+          description: "Story generated but audio creation failed.",
+          variant: "destructive"
+        });
       });
 
-      if (!ttsResponse.ok) throw new Error('Failed to convert to speech');
     } catch (error) {
       toast({
         title: "Error",
@@ -145,19 +154,29 @@ const StoryInterface = () => {
       if (!response.ok) throw new Error('Failed to start story');
       
       const data = await response.json();
-      const ttsResponse = await fetch('http://localhost:5000/api/tts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text: data.text }),
-      });
       
+      // Add the story immediately to start the animation
       setStories([{
         userInput: "Start new story",
         story: data.text,
         timestamp: Date.now()
       }]);
+      
+      // Start the TTS request without waiting for it to complete
+      fetch('http://localhost:5000/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: data.text }),
+      }).catch(error => {
+        console.error('TTS generation failed:', error);
+        toast({
+          title: "Warning",
+          description: "Story generated but audio creation failed.",
+          variant: "destructive"
+        });
+      });
       
       setHasStarted(true);
     } catch (error) {
