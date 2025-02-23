@@ -1,11 +1,10 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Send, Play, BookOpen } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Textarea } from './ui/textarea';
 import { useToast } from './ui/use-toast';
-import ReactMarkdown from 'react-markdown';
+import AnimatedText from './AnimatedText';
 
 declare global {
   interface Window {
@@ -182,7 +181,10 @@ const StoryInterface = () => {
           className="text-lg gap-3 transition-all duration-200 ease-in-out hover:scale-105"
         >
           {isLoading ? (
-            "Starting Story..."
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              Starting Story...
+            </div>
           ) : (
             <>
               <BookOpen className="h-6 w-6" />
@@ -198,16 +200,16 @@ const StoryInterface = () => {
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-2xl mx-auto space-y-8">
         {stories.map((story, index) => (
-          <Card key={story.timestamp} className="p-6 shadow-lg border-story-border bg-white">
+          <Card key={story.timestamp} className="p-6 shadow-lg border-story-border bg-white animate-fade-in">
             <div className="prose max-w-none space-y-4">
               <div className="p-4 bg-gray-50 rounded-lg">
                 <h3 className="font-medium text-gray-600 mb-2">Your Input:</h3>
                 <p className="text-gray-800">{story.userInput}</p>
               </div>
-              <div className="p-4 bg-blue-50 rounded-lg">
+              <div className="p-4 bg-blue-50 rounded-lg backdrop-blur-sm">
                 <h3 className="font-medium text-gray-600 mb-2">Generated Story:</h3>
                 <div className="text-gray-800 prose">
-                  <ReactMarkdown>{story.story}</ReactMarkdown>
+                  <AnimatedText text={story.story} />
                 </div>
               </div>
             </div>
@@ -228,12 +230,14 @@ const StoryInterface = () => {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Tell me your story idea..."
                 className="min-h-[120px] resize-none pr-12 text-lg"
+                disabled={isLoading}
               />
               <Button
                 variant="ghost"
                 size="icon"
                 className="absolute right-2 top-2 hover:bg-story-accent/10"
                 onClick={toggleRecording}
+                disabled={isLoading}
               >
                 {isRecording ? (
                   <MicOff className="h-5 w-5 text-red-500" />
@@ -250,7 +254,10 @@ const StoryInterface = () => {
                 className="transition-all duration-200 ease-in-out hover:scale-105"
               >
                 {isLoading ? (
-                  "Generating..."
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Generating...
+                  </div>
                 ) : (
                   <>
                     <Send className="mr-2 h-4 w-4" />
